@@ -8,18 +8,16 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-public class  BasicAuth {
+public class BasicAuth {
     @SneakyThrows
-    public static CloseableHttpClient authentication() {
+    public static CloseableHttpClient getAuthClient() {
         CredentialsProvider provider = new BasicCredentialsProvider();
         provider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials(ReadFile.read("username"), ReadFile.read("password")));
+                new UsernamePasswordCredentials(FileReader.read("username"), FileReader.read("password")));
 
-          CloseableHttpClient httpClient = HttpClientBuilder.create()
+          return HttpClientBuilder.create()
                 .setDefaultCredentialsProvider(provider)
                 .build();
-
-          return httpClient;
 
     }
 }

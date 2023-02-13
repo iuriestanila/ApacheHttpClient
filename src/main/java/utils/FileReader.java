@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-public class ReadFile {
+public class FileReader {
     @SneakyThrows
     public static String read(String name){
         Properties properties = new Properties();

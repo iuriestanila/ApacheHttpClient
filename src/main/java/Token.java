@@ -6,7 +6,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import utils.BasicAuth;
-import utils.ReadFile;
+import utils.FileReader;
 
 import java.util.*;
 
@@ -23,29 +23,21 @@ public class Token {
 
       @SneakyThrows
       public String getBearerToken(String scope) {
-          CloseableHttpResponse response = null;
-          CloseableHttpClient client = null;
-          String responseString;
-
-          try {
-                  client = BasicAuth.authentication();
-                  HttpPost httpPost = new HttpPost(ReadFile.read("urlToken"));
-
-                  List<BasicNameValuePair> parameters = new ArrayList<>();
-                  parameters.add(new BasicNameValuePair("grant_type", "client_credentials"));
-                  parameters.add(new BasicNameValuePair("scope", scope));
-                  httpPost.setEntity(new UrlEncodedFormEntity(parameters));
-
-                  response = client.execute(httpPost);
+            String responseString;
+            try (CloseableHttpClient client = BasicAuth.getAuthClient();
+                 CloseableHttpResponse response = client.execute(buildHttpPost(scope))) {
                   responseString = EntityUtils.toString(response.getEntity());
-          } finally {
-              if (response != null) {
-                  response.close();
-              }
-              if (client != null) {
-                  client.close();
-              }
-          }
-          return responseString;
+            }
+            return responseString;
+      }
+
+      @SneakyThrows
+      private HttpPost buildHttpPost(String scope) {
+            HttpPost httpPost = new HttpPost(FileReader.read("urlToken"));
+            List<BasicNameValuePair> parameters = new ArrayList<>();
+            parameters.add(new BasicNameValuePair("grant_type", "client_credentials"));
+            parameters.add(new BasicNameValuePair("scope", scope));
+            httpPost.setEntity(new UrlEncodedFormEntity(parameters));
+            return httpPost;
       }
 }
