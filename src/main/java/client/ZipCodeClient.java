@@ -30,8 +30,9 @@ public class ZipCodeClient {
     }
 
     @SneakyThrows
-    public ResponseEntity<List<String>> postZipCodes() {
-        final String[] zipcodesNew = {"44444", "55555", "66666"};
+    public ResponseEntity<List<String>> postZipCodes(List<String> zipcodesPassed) {
+        List<String> zipcodesNew = passZipcodes(zipcodesPassed);
+
         final String requestBody = objectMapper.writeValueAsString(zipcodesNew);
         final HttpResponse httpResponse = Client.doPost(POST_ZIPCODES_ENDPOINT, requestBody);
 
@@ -41,5 +42,30 @@ public class ZipCodeClient {
         final String[] zipcodes = objectMapper.readValue(httpResponse.getEntity().getContent(), String[].class);
         response.setBody(Arrays.asList(zipcodes));
         return response;
+    }
+
+    public List<String> passZipcodes(List<String> zipcodes) {
+        return zipcodes;
+    }
+
+    public int inSentListDuplicates(ResponseEntity<List<String>> zipCodes, String zipToCheck){
+        int duplicates = 0;
+        for(String zipcode : zipCodes.getBody()){
+            if(zipcode.equals(zipToCheck))
+                duplicates++;
+            }
+        return duplicates;
+        }
+
+    public int onServerDuplicates(ResponseEntity<List<String>> zipCodes, String... stringsToCheck) {
+        int duplicates = 0;
+        for (String zipCode : zipCodes.getBody()) {
+            for (String string : stringsToCheck) {
+                if (zipCode.equals(string)) {
+                    duplicates++;
+                }
+            }
+        }
+        return duplicates;
     }
 }
