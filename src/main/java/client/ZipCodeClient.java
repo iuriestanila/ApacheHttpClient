@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.http.HttpResponse;
 import pojo.ResponseEntity;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,9 +30,7 @@ public class ZipCodeClient {
 
     @SneakyThrows
     public ResponseEntity<List<String>> postZipCodes(List<String> zipcodesPassed) {
-        List<String> zipcodesNew = passZipcodes(zipcodesPassed);
-
-        final String requestBody = objectMapper.writeValueAsString(zipcodesNew);
+        final String requestBody = objectMapper.writeValueAsString(zipcodesPassed);
         final HttpResponse httpResponse = Client.doPost(POST_ZIPCODES_ENDPOINT, requestBody);
 
         ResponseEntity<List<String>> response = new ResponseEntity<>();
@@ -42,30 +39,5 @@ public class ZipCodeClient {
         final String[] zipcodes = objectMapper.readValue(httpResponse.getEntity().getContent(), String[].class);
         response.setBody(Arrays.asList(zipcodes));
         return response;
-    }
-
-    public List<String> passZipcodes(List<String> zipcodes) {
-        return zipcodes;
-    }
-
-    public int inSentListDuplicates(ResponseEntity<List<String>> zipCodes, String zipToCheck){
-        int duplicates = 0;
-        for(String zipcode : zipCodes.getBody()){
-            if(zipcode.equals(zipToCheck))
-                duplicates++;
-            }
-        return duplicates;
-        }
-
-    public int onServerDuplicates(ResponseEntity<List<String>> zipCodes, String... stringsToCheck) {
-        int duplicates = 0;
-        for (String zipCode : zipCodes.getBody()) {
-            for (String string : stringsToCheck) {
-                if (zipCode.equals(string)) {
-                    duplicates++;
-                }
-            }
-        }
-        return duplicates;
     }
 }
