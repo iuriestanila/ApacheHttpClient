@@ -2,8 +2,11 @@ package client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpResponse;
 import pojo.ResponseEntity;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,5 +42,18 @@ public class ZipCodeClient {
         final String[] zipcodes = objectMapper.readValue(httpResponse.getEntity().getContent(), String[].class);
         response.setBody(Arrays.asList(zipcodes));
         return response;
+    }
+
+    public String createAvailableZipcode() {
+        String randomZipCode = RandomStringUtils.randomNumeric(5);
+        List<String> zipCode = new ArrayList<>();
+        zipCode.add(randomZipCode);
+
+        final ResponseEntity<List<String>> response = postZipCodes(zipCode);
+        if (response.getStatusCode() == 201) {
+            return randomZipCode.toString();
+        } else {
+            throw new RuntimeException("Zip code was not added");
+        }
     }
 }
