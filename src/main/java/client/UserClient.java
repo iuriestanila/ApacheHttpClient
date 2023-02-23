@@ -11,6 +11,7 @@ import java.util.List;
 
 public class UserClient {
     private static final String POST_USERS_ENDPOINT = "/users";
+    private static final String GET_USERS_ENDPOINT = "/users?";
     private final ObjectMapper objectMapper;
 
     public UserClient() {
@@ -25,27 +26,8 @@ public class UserClient {
     }
 
     @SneakyThrows
-    public ResponseEntity<List<User>> getUsers(int olderThan, String sex, int youngerThan) {
-        String endpoint = "/users?";
-        if(olderThan > 0 && youngerThan > 0){
-            throw new RuntimeException("Parameters youngerThan and olderThan cannot be specified together");
-        } else if(olderThan > 0){
-            endpoint += "olderThan=" +olderThan;
-        } else if (youngerThan > 0) {
-            endpoint += "youngerThan=" +youngerThan;
-        }
-
-        if(sex != null) {
-            switch (sex) {
-                case "MALE" -> endpoint += "&sex=MALE";
-                case "FEMALE" -> endpoint += "&sex=FEMALE";
-                default -> {
-                }
-            }
-        }
-
-        final HttpResponse httpResponse = Client.doGet(endpoint);
-
+    public ResponseEntity<List<User>> getUsers(String key, String value) {
+        final HttpResponse httpResponse = Client.doGet(GET_USERS_ENDPOINT, key, value);
         ResponseEntity<List<User>> response = new ResponseEntity<>();
         response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
         List<User> appUsers = new ObjectMapper().readValue(httpResponse.getEntity().getContent(), new TypeReference<>() {

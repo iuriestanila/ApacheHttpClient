@@ -24,22 +24,13 @@ public class UserTest {
     public void postUserZipRemoved(){
         SoftAssert softAssert = new SoftAssert();
         User user = new User(28,"Rick","MALE", zipcode );
-
         int statusCode = userClient.postUser(user);
-
-        List<User> appUsers = userClient.getUsers(0,"MALE",30).getBody();
+        List<User> appUsers = userClient.getUsers("youngerThan","29").getBody();
         List<String> appZipCodes = zipcodeClient.getZipCodes().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_201, "User wasn't added, wrong status code");
-
-        softAssert.assertTrue(appUsers.stream()
-                .anyMatch(u -> u.getName().equals(user.getName())
-                        && u.getAge() == user.getAge()
-                        && u.getZipCode().equals(user.getZipCode())
-                        && u.getSex().equals(user.getSex())), "User wasn't added in the app");
-
+        softAssert.assertTrue(appUsers.contains(user), "User wasn't added to the app");
         softAssert.assertFalse(appZipCodes.contains(zipcode), "Zipcode wasn't removed from app zipcodes");
-
         softAssert.assertAll();
     }
 
@@ -48,16 +39,10 @@ public class UserTest {
         SoftAssert softAssert = new SoftAssert();
         User user = new User(31,"Ingrid","FEMALE",zipcode);
         int statusCode = userClient.postUser(user);
-        List<User> appUsers = userClient.getUsers(30,"FEMALE",0).getBody();
+        List<User> appUsers = userClient.getUsers("olderThan","30").getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_201, "User wasn't added, wrong status code");
-
-        softAssert.assertTrue(appUsers.stream()
-                .anyMatch(u -> u.getName().equals(user.getName())
-                        && u.getAge() == user.getAge()
-                        && u.getZipCode().equals(user.getZipCode())
-                        && u.getSex().equals(user.getSex())), "User wasn't added in the app");
-
+        softAssert.assertTrue(appUsers.contains(user), "User wasn't added to the app");
         softAssert.assertAll();
     }
 
@@ -66,16 +51,10 @@ public class UserTest {
         SoftAssert softAssert = new SoftAssert();
         User user = new User(50,"Jonas","MALE","FFFFF");
         int statusCode = userClient.postUser(user);
-        List<User> appUsers = userClient.getUsers(49,"MALE",0).getBody();
+        List<User> appUsers = userClient.getUsers("olderThan","49").getBody();
 
-        softAssert.assertEquals(statusCode, Const.STATUS_424, "User was added, wrong status code");
-
-        softAssert.assertFalse(appUsers.stream()
-                .anyMatch(u -> u.getName().equals(user.getName())
-                        && u.getAge() == user.getAge()
-                        && u.getZipCode().equals(user.getZipCode())
-                        && u.getSex().equals(user.getSex())), "User wasn't added in the app");
-
+        softAssert.assertEquals(statusCode, Const.STATUS_424, "User was added, wrong status code.");
+        softAssert.assertFalse(appUsers.contains(user), "User was added to the app.");
         softAssert.assertAll();
     }
 
@@ -84,16 +63,10 @@ public class UserTest {
         SoftAssert softAssert = new SoftAssert();
         User user = new User(50,"George","MALE", zipcode);
         int statusCode = userClient.postUser(user);
-        List<User> appUsers = userClient.getUsers(49,"MALE",0).getBody();
+        List<User> appUsers = userClient.getUsers("olderThan","49").getBody();
 
-        softAssert.assertEquals(statusCode, Const.STATUS_400, "User was added, wrong status code");
-
-        softAssert.assertFalse(appUsers.stream()
-                .anyMatch(u -> u.getName().equals(user.getName())
-                        && u.getAge() == user.getAge()
-                        && u.getZipCode().equals(user.getZipCode())
-                        && u.getSex().equals(user.getSex())), "User was added in the app");
-
+        softAssert.assertEquals(statusCode, Const.STATUS_400, "User was added, status isn't 400.");
+        softAssert.assertFalse(appUsers.contains(user), "User was added to the app.");
         softAssert.assertAll();
     }
 }

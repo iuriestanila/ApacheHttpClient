@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpResponse;
 import pojo.ResponseEntity;
+import pojo.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class ZipCodeClient {
     public ZipCodeClient() {
         this.objectMapper = new ObjectMapper();
     }
+
 
     @SneakyThrows
     public ResponseEntity<List<String>> getZipCodes() {
