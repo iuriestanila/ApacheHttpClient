@@ -32,7 +32,7 @@ public class UserClient {
     }
 
 
-    public ResponseEntity<List<User>> getUsersParam(String key, String value) {
+    public ResponseEntity<List<User>> getUsersWithParam(String key, String value) {
         final HttpResponse httpResponse = Client.doGet(GET_USERS_ENDPOINT_PARAM, key, value);
         return handleResponse(httpResponse);
     }
