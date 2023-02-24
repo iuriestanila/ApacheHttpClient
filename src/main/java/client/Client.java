@@ -12,6 +12,13 @@ public class Client {
                 .execute();
     }
 
+    public static HttpResponse doGet(String endpoint, String key, String value) {
+        return Request.get(BASE_URL + endpoint)
+                .addParameter(key, value)
+                .addBearerToken(AuthClient.getToken(AccessType.READ))
+                .execute();
+    }
+
     public static HttpResponse doPost(String endpoint, String body) {
         return Request.post(BASE_URL + endpoint)
                 .addBearerToken(AuthClient.getToken(AccessType.WRITE))
