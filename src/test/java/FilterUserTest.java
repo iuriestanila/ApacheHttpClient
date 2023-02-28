@@ -25,8 +25,8 @@ public class FilterUserTest {
     public void getUserTest() {
         SoftAssert softAssert = new SoftAssert();
 
-        softAssert.assertEquals(userClient.getUsers().getStatusCode(), Const.STATUS_200, "Wrong status, should be 200");
-        softAssert.assertNotNull(userClient.getUsers().getBody(), "User wasn't added to the app");
+        softAssert.assertEquals(userClient.getUser().getStatusCode(), Const.STATUS_200, "Wrong status, should be 200");
+        softAssert.assertNotNull(userClient.getUser().getBody(), "User wasn't added to the app");
         softAssert.assertAll();
     }
 

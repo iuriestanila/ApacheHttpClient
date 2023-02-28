@@ -25,6 +25,7 @@ public class Request {
             case PUT -> request = new HttpPut(url);
             case POST -> request = new HttpPost(url);
             case DELETE -> request = new HttpDelete(url);
+            case PATCH -> request = new HttpPatch(url);
             default -> throw new RuntimeException("Unexpected value: " + method);
         }
     }
@@ -35,6 +36,10 @@ public class Request {
 
     public static Request post(String url) {
         return new Request(url, HttpMethod.POST);
+    }
+
+    public static Request patch(String url) {
+        return new Request(url, HttpMethod.PATCH);
     }
 
     public static Request put(String url) {

@@ -12,4 +12,10 @@ public class User {
     private String name;
     private String sex;
     private String zipCode;
+
+    public User(int age, String sex, String zipCode) {
+        this.age = age;
+        this.sex = sex;
+        this.zipCode = zipCode;
+    }
 }

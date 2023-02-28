@@ -26,4 +26,20 @@ public class Client {
                 .addJsonBody(body)
                 .execute();
     }
+
+    public static HttpResponse doPatch(String endpoint, String body) {
+        return Request.patch(BASE_URL + endpoint)
+                .addBearerToken(AuthClient.getToken(AccessType.WRITE))
+                .addHeader("Content-Type", "application/json")
+                .addJsonBody(body)
+                .execute();
+    }
+
+    public static HttpResponse doPut(String endpoint, String body) {
+        return Request.put(BASE_URL + endpoint)
+                .addBearerToken(AuthClient.getToken(AccessType.WRITE))
+                .addHeader("Content-Type", "application/json")
+                .addJsonBody(body)
+                .execute();
+    }
 }

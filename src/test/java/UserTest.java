@@ -25,7 +25,7 @@ public class UserTest {
         SoftAssert softAssert = new SoftAssert();
         User user = new User(28,"Rick","MALE", zipcode );
         int statusCode = userClient.postUser(user);
-        List<User> appUsers = userClient.getUsers().getBody();
+        List<User> appUsers = userClient.getUser().getBody();
         List<String> appZipCodes = zipcodeClient.getZipCodes().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_201, "User wasn't added, wrong status code");
@@ -39,7 +39,7 @@ public class UserTest {
         SoftAssert softAssert = new SoftAssert();
         User user = new User(31,"Ingrid","FEMALE",zipcode);
         int statusCode = userClient.postUser(user);
-        List<User> appUsers = userClient.getUsers().getBody();
+        List<User> appUsers = userClient.getUser().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_201, "User wasn't added, wrong status code");
         softAssert.assertTrue(appUsers.contains(user), "User wasn't added to the app");
@@ -51,7 +51,7 @@ public class UserTest {
         SoftAssert softAssert = new SoftAssert();
         User user = new User(50,"Jonas","MALE","FFFFF");
         int statusCode = userClient.postUser(user);
-        List<User> appUsers = userClient.getUsers().getBody();
+        List<User> appUsers = userClient.getUser().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_424, "User was added, wrong status code.");
         softAssert.assertFalse(appUsers.contains(user), "User was added to the app.");
@@ -63,7 +63,7 @@ public class UserTest {
         SoftAssert softAssert = new SoftAssert();
         User user = new User(50,"George","MALE", zipcode);
         int statusCode = userClient.postUser(user);
-        List<User> appUsers = userClient.getUsers().getBody();
+        List<User> appUsers = userClient.getUser().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_400, "User was added, status isn't 400.");
         softAssert.assertFalse(appUsers.contains(user), "User was added to the app.");
