@@ -4,14 +4,18 @@ import enums.HttpMethod;
 import lombok.SneakyThrows;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.util.EntityUtils;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 
@@ -51,7 +55,7 @@ public class Request {
     }
 
     @SneakyThrows
-    public Request addParameter(String key, String value) { //
+    public Request addParameter(String key, String value) {
         URI uri = new URIBuilder(request.getRequestLine().getUri()).addParameter(key, value).build();
         ((HttpRequestBase) request).setURI(uri);
         return this;
