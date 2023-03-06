@@ -50,10 +50,6 @@ public class Request {
         return new Request(url, HttpMethod.PUT);
     }
 
-    public static Request delete(String url) {
-        return new Request(url, HttpMethod.DELETE);
-    }
-
     @SneakyThrows
     public Request addParameter(String key, String value) {
         URI uri = new URIBuilder(request.getRequestLine().getUri()).addParameter(key, value).build();

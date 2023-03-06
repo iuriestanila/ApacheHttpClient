@@ -30,6 +30,13 @@ public class UserClient {
         return statusCode;
     }
 
+    @SneakyThrows
+    public int deleteUser(User userToDelete) {
+        String requestBodyJSon = objectMapper.writeValueAsString(userToDelete);
+        HttpResponse httpResponse = Client.doDeleteWithBody(USERS_ENDPOINT, requestBodyJSon);
+        return httpResponse.getStatusLine().getStatusCode();
+    }
+
     public ResponseEntity<List<User>> getUsers() {
         final HttpResponse httpResponse = Client.doGet(USERS_ENDPOINT);
         return handleResponse(httpResponse);
