@@ -4,14 +4,18 @@ import enums.HttpMethod;
 import lombok.SneakyThrows;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.util.EntityUtils;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 
@@ -25,6 +29,7 @@ public class Request {
             case PUT -> request = new HttpPut(url);
             case POST -> request = new HttpPost(url);
             case DELETE -> request = new HttpDelete(url);
+            case PATCH -> request = new HttpPatch(url);
             default -> throw new RuntimeException("Unexpected value: " + method);
         }
     }
@@ -37,6 +42,10 @@ public class Request {
         return new Request(url, HttpMethod.POST);
     }
 
+    public static Request patch(String url) {
+        return new Request(url, HttpMethod.PATCH);
+    }
+
     public static Request put(String url) {
         return new Request(url, HttpMethod.PUT);
     }
@@ -46,7 +55,7 @@ public class Request {
     }
 
     @SneakyThrows
-    public Request addParameter(String key, String value) { //
+    public Request addParameter(String key, String value) {
         URI uri = new URIBuilder(request.getRequestLine().getUri()).addParameter(key, value).build();
         ((HttpRequestBase) request).setURI(uri);
         return this;
