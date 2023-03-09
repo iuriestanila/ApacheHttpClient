@@ -27,12 +27,12 @@ public class DeleteUserTest {
         SoftAssert softAssert = new SoftAssert();
 
         int statusCode = userClient.deleteUser(userToDelete);
-        List<User> appUsers = userClient.getUsers().getBody();
-        List<String> zipCodesApp = zipcodeClient.getZipCodes().getBody();
+        List<User> users = userClient.getUsers().getBody();
+        List<String> zipCodes = zipcodeClient.getZipCodes().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_204,"Wrong status code.");
-        softAssert.assertFalse(appUsers.contains(userToDelete),"User wasn't deleted.");
-        softAssert.assertTrue(zipCodesApp.contains(userToDelete.getZipCode()),
+        softAssert.assertFalse(users.contains(userToDelete),"User wasn't deleted.");
+        softAssert.assertTrue(zipCodes.contains(zipcode),
                 "Zip code wasn't returned in list of available zip codes");
         softAssert.assertAll();
     }
@@ -42,12 +42,12 @@ public class DeleteUserTest {
         SoftAssert softAssert = new SoftAssert();
         User userToDeleteRequiredFields = User.builder().name(userToDelete.getName()).sex(userToDelete.getSex()).build();
         int statusCode = userClient.deleteUser(userToDeleteRequiredFields);
-        List<User> appUsers = userClient.getUsers().getBody();
-        List<String> zipCodesApp = zipcodeClient.getZipCodes().getBody();
+        List<User> users = userClient.getUsers().getBody();
+        List<String> zipCodes = zipcodeClient.getZipCodes().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_204,"Wrong status code.");
-        softAssert.assertFalse(appUsers.contains(userToDelete),"User wasn't deleted.");
-        softAssert.assertTrue(zipCodesApp.contains(userToDelete.getZipCode()),
+        softAssert.assertFalse(users.contains(userToDelete),"User wasn't deleted.");
+        softAssert.assertTrue(zipCodes.contains(userToDelete.getZipCode()),
                 "Zip code wasn't returned in list of available zip codes");
         softAssert.assertAll();
     }
@@ -57,10 +57,10 @@ public class DeleteUserTest {
         SoftAssert softAssert = new SoftAssert();
         User userToDeleteRequiredFields = User.builder().name(userToDelete.getName()).build();
         int statusCode = userClient.deleteUser(userToDeleteRequiredFields);
-        List<User> appUsers = userClient.getUsers().getBody();
+        List<User> users = userClient.getUsers().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_409,"Wrong status code.");
-        softAssert.assertTrue(appUsers.contains(userToDelete),"User was deleted.");
+        softAssert.assertTrue(users.contains(userToDelete),"User was deleted.");
         softAssert.assertAll();
     }
 }

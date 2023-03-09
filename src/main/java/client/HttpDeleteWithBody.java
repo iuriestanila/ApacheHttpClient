@@ -1,4 +1,4 @@
-package pojo;
+package client;
 
 
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;

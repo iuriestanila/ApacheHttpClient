@@ -7,7 +7,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import pojo.HttpDeleteWithBody;
 
 public class Client {
     public final static String BASE_URL = "http://localhost:49000";
@@ -49,14 +48,11 @@ public class Client {
                 .execute();
     }
 
-    @SneakyThrows
-    public static HttpResponse doDeleteWithBody(String endpoint, String body) {
-        HttpDeleteWithBody request = new HttpDeleteWithBody(BASE_URL + endpoint);
-        request.addHeader("Authorization", "Bearer " + AuthClient.getToken(AccessType.WRITE));
-        request.addHeader("Content-Type", "application/json");
-        request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpResponse response = httpClient.execute(request);
-        return response;
+    public static HttpResponse doDelete(String endpoint, String body){
+        return Request.delete(BASE_URL + endpoint)
+                .addBearerToken(AuthClient.getToken(AccessType.WRITE))
+                .addHeader("Content-Type", "application/json")
+                .addJsonBody(body)
+                .execute();
     }
 }
