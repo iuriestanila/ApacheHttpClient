@@ -1,7 +1,12 @@
 package client;
 
 import enums.AccessType;
+import lombok.SneakyThrows;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 public class Client {
     public final static String BASE_URL = "http://localhost:49000";
@@ -37,6 +42,14 @@ public class Client {
 
     public static HttpResponse doPut(String endpoint, String body) {
         return Request.put(BASE_URL + endpoint)
+                .addBearerToken(AuthClient.getToken(AccessType.WRITE))
+                .addHeader("Content-Type", "application/json")
+                .addJsonBody(body)
+                .execute();
+    }
+
+    public static HttpResponse doDelete(String endpoint, String body){
+        return Request.delete(BASE_URL + endpoint)
                 .addBearerToken(AuthClient.getToken(AccessType.WRITE))
                 .addHeader("Content-Type", "application/json")
                 .addJsonBody(body)
