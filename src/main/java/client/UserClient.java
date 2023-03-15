@@ -11,10 +11,12 @@ import pojo.ResponseEntity;
 import pojo.User;
 import pojo.UserToUpdate;
 
+import java.io.File;
 import java.util.List;
 
 public class UserClient {
     private static final String USERS_ENDPOINT = "/users";
+    private static final String USERS_UPLOAD_ENDPOINT = "/users/upload";
     private final ObjectMapper objectMapper;
 
     public UserClient() {
@@ -25,6 +27,14 @@ public class UserClient {
     public int postUser(User user) {
         String requestBodyJSon = objectMapper.writeValueAsString(user);
         HttpResponse httpResponse = Client.doPost(USERS_ENDPOINT, requestBodyJSon);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        EntityUtils.consumeQuietly(httpResponse.getEntity());
+        return statusCode;
+    }
+
+    @SneakyThrows
+    public int postUsers(File file) {
+        HttpResponse httpResponse = Client.doPost(USERS_UPLOAD_ENDPOINT, file);
         int statusCode = httpResponse.getStatusLine().getStatusCode();
         EntityUtils.consumeQuietly(httpResponse.getEntity());
         return statusCode;

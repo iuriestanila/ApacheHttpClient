@@ -2,15 +2,20 @@ package client;
 
 import enums.HttpMethod;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Base64;
 
@@ -77,6 +82,16 @@ public class Request {
         return this;
     }
 
+    public Request attachFileToBody(File file) {
+        String fileName = FilenameUtils.getBaseName(file.getName());
+        HttpEntity entity = MultipartEntityBuilder
+                .create()
+                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+                .addBinaryBody("file", file, ContentType.DEFAULT_BINARY, fileName)
+                .build();
+        ((HttpEntityEnclosingRequestBase) request).setEntity(entity);
+        return this;
+    }
     @SneakyThrows
     public HttpResponse execute() {
         return (httpClient.execute((HttpUriRequest) request));
