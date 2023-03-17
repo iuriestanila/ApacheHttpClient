@@ -1,5 +1,6 @@
 import client.UserClient;
 import client.ZipCodeClient;
+import io.qameta.allure.Issue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -37,7 +38,8 @@ public class DeleteUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_2; bug")
+    @Issue("GML-60.1")
+    @Test(description = "Scenario_2")
     public void fillRequiredFieldsDeleteTest() {
         SoftAssert softAssert = new SoftAssert();
         User userToDeleteRequiredFields = User.builder().name(userToDelete.getName()).sex(userToDelete.getSex()).build();

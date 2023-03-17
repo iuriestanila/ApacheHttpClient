@@ -1,4 +1,5 @@
 import client.ZipCodeClient;
+import io.qameta.allure.Issue;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -22,7 +23,8 @@ public class ZipCodeTest {
         zipCodeRand2 = RandomStringUtils.randomNumeric(5);
     }
 
-    @Test(description = "Scenario_1; bug")
+    @Issue("GML-20.1")
+    @Test(description = "Scenario_1")
     public void getZipCodesTest() {
         final ResponseEntity<List<String>> zipCodes = zipCodeClient.getZipCodes();
         Assert.assertEquals(zipCodes.getStatusCode(), Const.STATUS_200, "Status code is not 200");
@@ -38,7 +40,8 @@ public class ZipCodeTest {
         Assert.assertTrue(zipCodes.getBody().contains(zipCodeRand2),"Zip code wasn't added");
     }
 
-    @Test(description = "Scenario_3; bug")
+    @Issue("GML-20.2")
+    @Test(description = "Scenario_3")
     public void postZipCodesInSentListDuplicatesTest() {
            ResponseEntity<List<String>> zipCodes = zipCodeClient.postZipCodes(List.of(zipCodeRand1, zipCodeRand1));
            Assert.assertEquals(zipCodes.getStatusCode(),Const.STATUS_201,"Isn't 201");
@@ -46,7 +49,8 @@ public class ZipCodeTest {
                    1, "Duplicates were created");
     }
 
-    @Test(description = "Scenario_4; bug")
+    @Issue("GML-20.3")
+    @Test(description = "Scenario_4")
     public void postZipCodesOnServerDuplicatesTest() {
         List zipCodesOnServer = List.of("qqqqq", "22222");
         ResponseEntity<List<String>> zipCodes = zipCodeClient.postZipCodes(zipCodesOnServer);

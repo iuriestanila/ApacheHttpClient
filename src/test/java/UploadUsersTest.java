@@ -2,6 +2,7 @@ import client.UserClient;
 import client.ZipCodeClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qameta.allure.Issue;
 import lombok.SneakyThrows;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -44,8 +45,9 @@ public class UploadUsersTest {
         softAssert.assertAll();
     }
 
+    @Issue("GML-70.1")
     @SneakyThrows
-    @Test(description = "Scenario_2; bug")
+    @Test(description = "Scenario_2")
     public void uploadUserIncorrectZipcodeTest() {
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/userIncorrectZipcode.json");
@@ -60,9 +62,10 @@ public class UploadUsersTest {
         softAssert.assertAll();
     }
 
+    @Issue("GML-70.2")
     @SneakyThrows
-    @Test(description = "Scenario_3, bug")
-    public void requiredFieldMissDeleteTest() {
+    @Test(description = "Scenario_3")
+    public void requiredFieldMissUploadTest() {
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/userIncorrectZipcode.json");
         usersFromFile = objectMapper.readValue(file, new TypeReference<>() {

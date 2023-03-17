@@ -2,6 +2,7 @@ package client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -24,6 +25,7 @@ public class UserClient {
     }
 
     @SneakyThrows
+    @Step
     public int postUser(User user) {
         String requestBodyJSon = objectMapper.writeValueAsString(user);
         HttpResponse httpResponse = Client.doPost(USERS_ENDPOINT, requestBodyJSon);
@@ -33,6 +35,7 @@ public class UserClient {
     }
 
     @SneakyThrows
+    @Step
     public ResponseEntity<String> postUsers(File file) {
         ResponseEntity<String> responseEntity = new ResponseEntity<>();
         HttpResponse httpResponse = Client.doPost(USERS_UPLOAD_ENDPOINT, file);
@@ -42,6 +45,7 @@ public class UserClient {
     }
 
     @SneakyThrows
+    @Step
     public int deleteUser(User userToDelete) {
         String requestBodyJSon = objectMapper.writeValueAsString(userToDelete);
         HttpResponse httpResponse = Client.doDelete(USERS_ENDPOINT, requestBodyJSon);
@@ -50,17 +54,20 @@ public class UserClient {
         return statusCode;
     }
 
+    @Step
     public ResponseEntity<List<User>> getUsers() {
         final HttpResponse httpResponse = Client.doGet(USERS_ENDPOINT);
         return handleResponse(httpResponse);
     }
 
 
+    @Step
     public ResponseEntity<List<User>> getUsers(String key, String value) {
         final HttpResponse httpResponse = Client.doGet(USERS_ENDPOINT, key, value);
         return handleResponse(httpResponse);
     }
 
+    @Step
     @SneakyThrows
     public int patchUser(UserToUpdate userToUpdate) {
         String requestBodyJSon = objectMapper.writeValueAsString(userToUpdate);
@@ -70,6 +77,7 @@ public class UserClient {
         return statusCode;
     }
 
+    @Step
     @SneakyThrows
     public int putUser(UserToUpdate userToUpdate) {
         String requestBodyJSon = objectMapper.writeValueAsString(userToUpdate);

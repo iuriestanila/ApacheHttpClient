@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="api-suite">
+
+    <listeners>
+        <listener class-name="utils.RestListener"/>
+    </listeners>
+
+    <test name="user testing">
+        <classes>
+            <class name="UserTest"/>
+            <class name="ZipCodeTest"/>
+            <class name="FilterUserTest"/>
+            <class name="DeleteUserTest"/>
+            <class name="UpdateUserTest"/>
+            <class name="UploadUsersTest"/>
+        </classes>
+    </test>
+</suite>
