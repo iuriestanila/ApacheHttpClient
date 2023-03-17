@@ -8,6 +8,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import java.io.File;
+
 public class Client {
     public final static String BASE_URL = "http://localhost:49000";
 
@@ -29,6 +31,13 @@ public class Client {
                 .addBearerToken(AuthClient.getToken(AccessType.WRITE))
                 .addHeader("Content-Type", "application/json")
                 .addJsonBody(body)
+                .execute();
+    }
+
+    public static HttpResponse doPost(String endpoint, File file) {
+        return Request.post(BASE_URL + endpoint)
+                .addBearerToken(AuthClient.getToken(AccessType.WRITE))
+                .attachFileToBody(file)
                 .execute();
     }
 

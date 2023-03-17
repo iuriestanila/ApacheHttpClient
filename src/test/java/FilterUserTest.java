@@ -33,7 +33,7 @@ public class FilterUserTest {
     @Test(description = "Scenario_2")
     public void getUserOlderThanTest() {
         SoftAssert softAssert = new SoftAssert();
-        ResponseEntity<List<User>> response = userClient.getUsersWithParam("olderThan", "30");
+        ResponseEntity<List<User>> response = userClient.getUsers("olderThan", "30");
 
         softAssert.assertEquals(response.getStatusCode(), Const.STATUS_200, "Wrong status code");
         softAssert.assertTrue(response.getBody().stream().allMatch(user -> user.getAge() > 30), "User is younger than 30");
@@ -43,7 +43,7 @@ public class FilterUserTest {
     @Test(description = "Scenario_3")
     public void getUserYoungerThanTest() {
         SoftAssert softAssert = new SoftAssert();
-        ResponseEntity<List<User>> response = userClient.getUsersWithParam("youngerThan", "25");
+        ResponseEntity<List<User>> response = userClient.getUsers("youngerThan", "25");
 
         softAssert.assertEquals(response.getStatusCode(), Const.STATUS_200, "Wrong status code");
         softAssert.assertTrue(response.getBody().stream().allMatch(user -> user.getAge() < 25), "User is older than 25");
@@ -53,7 +53,7 @@ public class FilterUserTest {
     @Test(description = "Scenario_4")
     public void getUserSexParameterTest() {
         SoftAssert softAssert = new SoftAssert();
-        ResponseEntity<List<User>> response = userClient.getUsersWithParam("sex", "MALE");
+        ResponseEntity<List<User>> response = userClient.getUsers("sex", "MALE");
 
         softAssert.assertEquals(response.getStatusCode(), Const.STATUS_200, "Wrong status code");
         softAssert.assertTrue(response.getBody().stream().allMatch(user -> user.getSex().equals("MALE")), "User isn't male");
