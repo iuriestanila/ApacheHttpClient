@@ -1,5 +1,6 @@
 import client.UserClient;
 import client.ZipCodeClient;
+import io.qameta.allure.Issue;
 import lombok.SneakyThrows;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -40,8 +41,9 @@ public class UpdateUserTest {
         softAssert.assertAll();
     }
 
+    @Issue("GML-50.1")
     @SneakyThrows
-    @Test(description = "Scenario_2; bug")
+    @Test(description = "Scenario_2")
     public void putUserIncorrectZipcodeTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -58,7 +60,8 @@ public class UpdateUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_3; bug")
+    @Issue("GML-50.2")
+    @Test(description = "Scenario_3")
     public void putUserFieldMissingTest() {
         SoftAssert softAssert = new SoftAssert();
 

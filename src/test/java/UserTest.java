@@ -1,5 +1,6 @@
 import client.UserClient;
 import client.ZipCodeClient;
+import io.qameta.allure.Issue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -58,7 +59,8 @@ public class UserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_4; bug")
+    @Issue("GML-30.1")
+    @Test(description = "Scenario_4")
     public void postUserSameNameSexAsOnApp(){
         SoftAssert softAssert = new SoftAssert();
         User user = new User(50,"George","MALE", zipcode);
