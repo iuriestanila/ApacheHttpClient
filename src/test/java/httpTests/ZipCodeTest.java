@@ -1,4 +1,4 @@
-package httpTestsWithBugs;
+package httpTests;
 
 import apacheHttpClient.client.ZipCodeClient;
 import io.qameta.allure.Issue;

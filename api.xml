@@ -4,12 +4,12 @@
 <suite name="api-suite">
     <test name="user testing">
         <classes>
-            <class name="httpTestsWithBugs.UserTest"/>
-            <class name="httpTestsWithBugs.ZipCodeTest"/>
-            <class name="httpTestsWithBugs.FilterUserTest"/>
-            <class name="httpTestsWithBugs.DeleteUserTest"/>
-            <class name="httpTestsWithBugs.UpdateUserTest"/>
-            <class name="httpTestsWithBugs.UploadUsersTest"/>
+            <class name="httpTests.UserTest"/>
+            <class name="httpTests.ZipCodeTest"/>
+            <class name="httpTests.FilterUserTest"/>
+            <class name="httpTests.DeleteUserTest"/>
+            <class name="httpTests.UpdateUserTest"/>
+            <class name="httpTests.UploadUsersTest"/>
         </classes>
     </test>
 </suite>

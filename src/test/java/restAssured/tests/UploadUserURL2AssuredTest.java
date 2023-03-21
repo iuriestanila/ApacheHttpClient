@@ -15,7 +15,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import restAssured.AuthRAssured;
-import restAssured.client.UserClientAssured;
 
 import java.io.File;
 import java.util.List;
@@ -24,13 +23,11 @@ import static io.restassured.RestAssured.given;
 
 public class UploadUserURL2AssuredTest {
     private static final String UPLOAD_RESPONSE_TEXT = "Number of users = ";
-    UserClientAssured userClientAssured;
     private UserClient userClient;
     private ObjectMapper objectMapper;
     List<User> usersFromFile;
     @BeforeMethod
     public void init() {
-        userClientAssured = new UserClientAssured();
         userClient = new UserClient();
         objectMapper = new ObjectMapper();
     }
@@ -42,7 +39,6 @@ public class UploadUserURL2AssuredTest {
         File file = new File("src/test/resources/users.json");
         usersFromFile = objectMapper.readValue(file, new TypeReference<>() {
         });
-        List<User> users = userClientAssured.getUsersListUserAssured();
 
         Response response = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
@@ -50,7 +46,12 @@ public class UploadUserURL2AssuredTest {
                 .accept(ContentType.JSON)
                 .multiPart(new File("src/test/resources/userURL2.json"))
                 .when()
-                .post(Client.BASE_URL_2 + UserClient.USERS_UPLOAD_ENDPOINT);
+                .post(Client.BASE_URL + Const.USERS_UPLOAD_ENDPOINT);
+
+        List<User> users = given()
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then().extract().body().jsonPath().getList("$", User.class);
 
         response.then().statusCode(Const.STATUS_201);
         softAssert.assertTrue(equals(UPLOAD_RESPONSE_TEXT + usersFromFile.size()), response.getBody().asString());
@@ -65,15 +66,18 @@ public class UploadUserURL2AssuredTest {
         usersFromFile = objectMapper.readValue(file, new TypeReference<>() {
         });
 
-        List<User> users = userClientAssured.getUsersListUserAssured();
-
         Response response = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
                 .contentType(ContentType.MULTIPART)
                 .accept(ContentType.JSON)
                 .multiPart(new File("src/test/resources/userIncorrectZipcodeURL2.json"))
                 .when()
-                .post(Client.BASE_URL_2 + UserClient.USERS_UPLOAD_ENDPOINT);
+                .post(Client.BASE_URL + Const.USERS_UPLOAD_ENDPOINT);
+
+        List<User> users = given()
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then().extract().body().jsonPath().getList("$", User.class);
 
         response.then().statusCode(Const.STATUS_424);
         softAssert.assertFalse(users.containsAll(usersFromFile), "User were uploaded");
@@ -87,21 +91,24 @@ public class UploadUserURL2AssuredTest {
         usersFromFile = objectMapper.readValue(file, new TypeReference<>() {
         });
 
-        List<User> users = userClientAssured.getUsersListUserAssured();
-
         Response response = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
                 .contentType(ContentType.MULTIPART)
                 .accept(ContentType.JSON)
                 .multiPart(new File("src/test/resources/userMissRequiredFieldURL2.json"))
                 .when()
-                .post(Client.BASE_URL_2 + UserClient.USERS_UPLOAD_ENDPOINT);
+                .post(Client.BASE_URL + Const.USERS_UPLOAD_ENDPOINT);
+
+        List<User> users = given()
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then().extract().body().jsonPath().getList("$", User.class);
 
         response.then().statusCode(Const.STATUS_409);
         softAssert.assertFalse(users.containsAll(usersFromFile), "User were uploaded");
+        softAssert.assertAll();
 
     }
-
     @AfterMethod
     public void delete() {
         usersFromFile.forEach(user -> userClient.deleteUser(user));

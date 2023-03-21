@@ -22,7 +22,7 @@ public class AuthRAssured {
                     .auth().preemptive().basic(LOGIN, PASSWORD)
                     .param("grant_type", "client_credentials")
                     .param("scope", scope.name().toLowerCase())
-                    .post(Client.BASE_URL_2 + TOKEN_ENDPOINT);
+                    .post(Client.BASE_URL + TOKEN_ENDPOINT);
 
             return response.jsonPath().getString("access_token");
         }

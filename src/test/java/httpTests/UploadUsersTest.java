@@ -1,4 +1,4 @@
-package httpTestsWithBugs;
+package httpTests;
 
 import apacheHttpClient.client.UserClient;
 import com.fasterxml.jackson.core.type.TypeReference;

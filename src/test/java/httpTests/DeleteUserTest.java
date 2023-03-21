@@ -1,4 +1,4 @@
-package httpTestsWithBugs;
+package httpTests;
 
 import apacheHttpClient.client.UserClient;
 import apacheHttpClient.client.ZipCodeClient;

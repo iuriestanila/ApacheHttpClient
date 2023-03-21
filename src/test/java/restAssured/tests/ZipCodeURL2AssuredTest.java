@@ -6,6 +6,7 @@ import apacheHttpClient.enums.AccessType;
 import apacheHttpClient.utils.Const;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import restAssured.AuthRAssured;
@@ -26,42 +27,40 @@ public class ZipCodeURL2AssuredTest {
         zipCodeRand1 = RandomStringUtils.randomNumeric(5);
         zipCodeRand2 = RandomStringUtils.randomNumeric(5);
     }
-
     @Test
     public void getZipCodesAssuredTest() {
         given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
                 .when()
-                .get(Client.BASE_URL_2 + ZipCodeClient.GET_ZIPCODES_ENDPOINT)
+                .get(Client.BASE_URL + ZipCodeClient.GET_ZIPCODES_ENDPOINT)
                 .then()
                 .statusCode(Const.STATUS_200)
-                .body("$",hasSize(greaterThan(0)));
+                .body("$", hasSize(greaterThan(0)));
     }
 
     @Test(description = "Scenario_2")
     public void postZipCodesAssuredTest() {
-        List<String> zipCodes = List.of(zipCodeRand1,zipCodeRand2);
-
+        List<String> zipCodes = List.of(zipCodeRand1, zipCodeRand2);
         given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
-                .header("Content-Type","application/json")
+                .header("Content-Type", "application/json")
                 .body(zipCodes)
                 .when()
-                .post(Client.BASE_URL_2 + ZipCodeClient.POST_ZIPCODES_ENDPOINT)
+                .post(Client.BASE_URL + ZipCodeClient.POST_ZIPCODES_ENDPOINT)
                 .then()
                 .statusCode(Const.STATUS_201)
-                .body("",hasItems((zipCodes.toArray())));
+                .body("", hasItems((zipCodes.toArray())));
     }
 
     @Test(description = "Scenario_3")
     public void postZipCodesInSentListDuplicatesAssuredTest() {
-        List<String> duplicates = List.of(zipCodeRand1,zipCodeRand1);
+        List<String> duplicates = List.of(zipCodeRand1, zipCodeRand1);
 
-       Response response = given()
+        Response response = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
-                .header("Content-Type","application/json")
+                .header("Content-Type", "application/json")
                 .body(duplicates)
-                .post(Client.BASE_URL_2 + ZipCodeClient.POST_ZIPCODES_ENDPOINT);
+                .post(Client.BASE_URL + ZipCodeClient.POST_ZIPCODES_ENDPOINT);
 
         List<String> responseZipCodes = response.jsonPath().getList("$");
 
@@ -71,13 +70,13 @@ public class ZipCodeURL2AssuredTest {
 
     @Test(description = "Scenario_4")
     public void postZipCodesOnServerDuplicatesAssuredTest() {
-        List<String> duplicatesOnServer = List.of("ABCDE","12345");
+        List<String> duplicatesOnServer = List.of("ABCDE", "12345");
 
         Response response = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
-                .header("Content-Type","application/json")
+                .header("Content-Type", "application/json")
                 .body(duplicatesOnServer)
-                .post(Client.BASE_URL_2 + ZipCodeClient.POST_ZIPCODES_ENDPOINT);
+                .post(Client.BASE_URL + ZipCodeClient.POST_ZIPCODES_ENDPOINT);
 
         List<String> responseZipCodes = response.jsonPath().getList("$");
 

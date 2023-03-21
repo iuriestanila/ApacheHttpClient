@@ -1,4 +1,4 @@
-package httpTestsCorrect;
+package httpTests;
 
 import apacheHttpClient.client.UserClient;
 import apacheHttpClient.client.ZipCodeClient;
@@ -13,7 +13,7 @@ import apacheHttpClient.utils.Const;
 
 import java.util.List;
 
-public class UpdateUserURL2Test {
+public class UpdateUserTest {
     private UserClient userClient;
     private ZipCodeClient zipcodeClient;
     private String zipcode;
@@ -23,8 +23,8 @@ public class UpdateUserURL2Test {
     public void init() {
         userClient = new UserClient();
         zipcodeClient = new ZipCodeClient();
-        zipcode = zipcodeClient.createAvailableZipcodeURL2();
-        userToChange = userClient.createAvailableUserURL2(zipcode);
+        zipcode = zipcodeClient.createAvailableZipcode();
+        userToChange = userClient.createAvailableUser(zipcode);
     }
 
     @Test(description = "Scenario_1")
@@ -34,8 +34,8 @@ public class UpdateUserURL2Test {
         User userNewValues = User.random(zipcode);
         UserToUpdate userToUpdate = new UserToUpdate(userNewValues, userToChange);
 
-        int statusCode = userClient.patchUserURL2(userToUpdate);
-        List<User> appUsers = userClient.getUsersURL2().getBody();
+        int statusCode = userClient.patchUser(userToUpdate);
+        List<User> appUsers = userClient.getUsers().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_200,"Wrong status code.");
         softAssert.assertTrue(appUsers.contains(userNewValues),"User wasn't updated.");
@@ -52,14 +52,17 @@ public class UpdateUserURL2Test {
         User newUser = User.random();
         UserToUpdate userToUpdate = new UserToUpdate(newUser, userToChange);
 
-        int statusCode = userClient.putUserURL2(userToUpdate);
-        List<User> appUsers = userClient.getUsersURL2().getBody();
+        int statusCode = userClient.putUser(userToUpdate);
+        List<User> appUsers = userClient.getUsers().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_424,"Wrong status code.");
         softAssert.assertFalse(appUsers.contains(newUser),"User was updated.");
+        softAssert.assertTrue(appUsers.contains(userToChange),
+                String.format("User %s was deleted.", userToChange.toString()));
         softAssert.assertAll();
     }
 
+    @Issue("GML-50.2")
     @Test(description = "Scenario_3")
     public void putUserFieldMissingTest() {
         SoftAssert softAssert = new SoftAssert();
@@ -67,11 +70,12 @@ public class UpdateUserURL2Test {
         User userNewValues = User.builder().age(25).zipCode(zipcode).build();
         UserToUpdate userToUpdate = new UserToUpdate(userNewValues, userToChange);
 
-        int statusCode = userClient.putUserURL2(userToUpdate);
-        List<User> appUsers = userClient.getUsersURL2().getBody();
+        int statusCode = userClient.putUser(userToUpdate);
+        List<User> appUsers = userClient.getUsers().getBody();
 
         softAssert.assertEquals(statusCode, Const.STATUS_409,"Wrong status code.");
         softAssert.assertFalse(appUsers.contains(userNewValues),"User was updated.");
+        softAssert.assertTrue(appUsers.contains(userToChange),"User was updated.");
         softAssert.assertAll();
     }
 }

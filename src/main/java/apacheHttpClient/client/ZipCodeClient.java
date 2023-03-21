@@ -36,36 +36,9 @@ public class ZipCodeClient {
 
     @Step
     @SneakyThrows
-    public ResponseEntity<List<String>> getZipCodesURl2() {
-        final HttpResponse httpResponse = Client.doGetUrl2(GET_ZIPCODES_ENDPOINT);
-
-        ResponseEntity<List<String>> response = new ResponseEntity<>();
-        response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
-
-        final String[] zipcodes = objectMapper.readValue(httpResponse.getEntity().getContent(), String[].class);
-        response.setBody(Arrays.asList(zipcodes));
-        return response;
-    }
-
-    @Step
-    @SneakyThrows
     public ResponseEntity<List<String>> postZipCodes(List<String> zipcodesPassed) {
         final String requestBody = objectMapper.writeValueAsString(zipcodesPassed);
         final HttpResponse httpResponse = Client.doPost(POST_ZIPCODES_ENDPOINT, requestBody);
-
-        ResponseEntity<List<String>> response = new ResponseEntity<>();
-        response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
-
-        final String[] zipcodes = objectMapper.readValue(httpResponse.getEntity().getContent(), String[].class);
-        response.setBody(Arrays.asList(zipcodes));
-        return response;
-    }
-
-    @Step
-    @SneakyThrows
-    public ResponseEntity<List<String>> postZipCodesURL2(List<String> zipcodesPassed) {
-        final String requestBody = objectMapper.writeValueAsString(zipcodesPassed);
-        final HttpResponse httpResponse = Client.doPostURL2(POST_ZIPCODES_ENDPOINT, requestBody);
 
         ResponseEntity<List<String>> response = new ResponseEntity<>();
         response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
@@ -81,19 +54,6 @@ public class ZipCodeClient {
         zipCode.add(randomZipCode);
 
         final ResponseEntity<List<String>> response = postZipCodes(zipCode);
-        if (response.getStatusCode() == 201) {
-            return randomZipCode.toString();
-        } else {
-            throw new RuntimeException("Zip code was not added");
-        }
-    }
-
-    public String createAvailableZipcodeURL2() {
-        String randomZipCode = RandomStringUtils.randomNumeric(5);
-        List<String> zipCode = new ArrayList<>();
-        zipCode.add(randomZipCode);
-
-        final ResponseEntity<List<String>> response = postZipCodesURL2(zipCode);
         if (response.getStatusCode() == 201) {
             return randomZipCode.toString();
         } else {
