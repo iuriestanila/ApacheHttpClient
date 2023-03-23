@@ -23,7 +23,7 @@ public class FilterUserTest {
         zipcode = zipcodeClient.createAvailableZipcode();
     }
 
-    @Test(description = "Scenario_1")
+    @Test(description = "GetUserTest scenario_1")
     public void getUserTest() {
         SoftAssert softAssert = new SoftAssert();
         final ResponseEntity<List<User>> responseEntity = userClient.getUsers();
@@ -32,7 +32,7 @@ public class FilterUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_2")
+    @Test(description = "GetUserOlderThanTest scenario_2")
     public void getUserOlderThanTest() {
         SoftAssert softAssert = new SoftAssert();
         ResponseEntity<List<User>> response = userClient.getUsers("olderThan", "30");
@@ -42,7 +42,7 @@ public class FilterUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_3")
+    @Test(description = "GetUserYoungerThanTest scenario_3")
     public void getUserYoungerThanTest() {
         SoftAssert softAssert = new SoftAssert();
         ResponseEntity<List<User>> response = userClient.getUsers("youngerThan", "25");
@@ -52,7 +52,7 @@ public class FilterUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_4")
+    @Test(description = "GetUserSexParameterTest scenario_4")
     public void getUserSexParameterTest() {
         SoftAssert softAssert = new SoftAssert();
         ResponseEntity<List<User>> response = userClient.getUsers("sex", "MALE");

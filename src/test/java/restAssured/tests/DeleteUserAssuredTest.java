@@ -5,7 +5,6 @@ import apacheHttpClient.client.UserClient;
 import apacheHttpClient.client.ZipCodeClient;
 import apacheHttpClient.enums.AccessType;
 import apacheHttpClient.pojo.User;
-import apacheHttpClient.pojo.UserToUpdate;
 import apacheHttpClient.utils.Const;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -19,34 +18,53 @@ import restAssured.AuthRAssured;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 
-public class UpdateUserURL2AssuredTest {
+;
+
+public class DeleteUserAssuredTest {
     private UserClient userClient;
     private ZipCodeClient zipcodeClient;
     private String zipcode;
-    private User userToChange;
+    private User userToDelete;
 
     @BeforeMethod
     public void init() {
         userClient = new UserClient();
         zipcodeClient = new ZipCodeClient();
         zipcode = zipcodeClient.createAvailableZipcode();
-        userToChange = userClient.createAvailableUser(zipcode);
+        userToDelete = userClient.createAvailableUser(zipcode);
     }
 
-    @Test(description = "Scenario_1")
-    public void patchUserAssuredTest() {
+    @Test(description = "DeleteUserTest scenario_1")
+    public void deleteUserTest() {
+        final RequestSpecification request = given().contentType(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE));
+
+        request.body(userToDelete)
+                .when().delete(Client.BASE_URL + Const.USERS_ENDPOINT).then()
+                .statusCode(Const.STATUS_204);
+
+        request.when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then()
+                .body(not(Matchers.hasItem(userToDelete)));
+    }
+
+
+    @Test(description = "FillRequiredFieldsDeleteTest scenario_2")
+    public void fillRequiredFieldsDeleteTest() {
         SoftAssert softAssert = new SoftAssert();
-        User userNewValues = User.random(zipcode);
-        UserToUpdate userToUpdate = new UserToUpdate(userNewValues, userToChange);
+        User userToDeleteRequiredFields = User.builder().name(userToDelete.getName())
+                .sex(userToDelete.getSex()).build();
 
         Response response = given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
-                .body(userToUpdate)
+                .body(userToDeleteRequiredFields)
                 .when()
-                .patch(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .delete(Client.BASE_URL + Const.USERS_ENDPOINT)
                 .then()
                 .extract()
                 .response();
@@ -56,54 +74,43 @@ public class UpdateUserURL2AssuredTest {
                 .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
                 .then().extract().body().jsonPath().getList("$", User.class);
 
-        response.then()
-                .statusCode(Const.STATUS_200);
-        softAssert.assertTrue(users.contains(userNewValues), "User wasn't updated.");
-        softAssert.assertFalse(users.contains(userToChange), "User wasn't updated.");
-    }
-
-    @Test(description = "Scenario_2")
-    public void putUserIncorrectZipcodeAssuredTest() {
-        SoftAssert softAssert = new SoftAssert();
-        User newUser = User.random();
-        UserToUpdate userToUpdate = new UserToUpdate(newUser, userToChange);
-
-        Response response = given()
-                .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
-                .body(userToUpdate)
-                .when()
-                .put(Client.BASE_URL + Const.USERS_ENDPOINT)
-                .then()
-                .extract()
-                .response();
-
-        List<User> users = given()
+        List<String> zipCodes = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
-                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
-                .then().extract().body().jsonPath().getList("$", User.class);
+                .when().get(Client.BASE_URL + ZipCodeClient.GET_ZIPCODES_ENDPOINT)
+                .then().extract().body().jsonPath().getList("$");
 
         response.then()
-                .statusCode(Const.STATUS_424);
-        softAssert.assertFalse(users.contains(newUser), "User was updated.");
+                .statusCode(Const.STATUS_204);
+        assertThat("User wasn't deleted.", users, not(hasItem(userToDelete)));
+        softAssert.assertTrue(zipCodes.contains(userToDelete.getZipCode()),
+                "Zip code wasn't returned in list of available zip codes");
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_3")
-    public void putUserFieldMissingAssuredTest() {
-        User userNewValues = User.builder().age(25).zipCode(zipcode).build();
-        UserToUpdate userToUpdate = new UserToUpdate(userNewValues, userToChange);
 
-        final RequestSpecification request = given().contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE));
+    @Test(description = "RequiredFieldMissDeleteTest scenario_3")
+    public void requiredFieldMissDeleteTest() {
+        SoftAssert softAssert = new SoftAssert();
+        User userToDeleteReqFieldsMiss = User.builder().name(userToDelete.getName()).build();
 
-        request.body(userToUpdate)
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
+                .body(userToDeleteReqFieldsMiss)
                 .when()
-                .put(Client.BASE_URL + Const.USERS_ENDPOINT).then().statusCode(409);
-
-        request.when()
-                .get(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .delete(Client.BASE_URL + Const.USERS_ENDPOINT)
                 .then()
-                .body(not(Matchers.hasItem(userNewValues)));
+                .extract()
+                .response();
+
+        List<User> users = given()
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then().extract().body().jsonPath().getList("$", User.class);
+
+        response.then()
+                .statusCode(Const.STATUS_409);
+        softAssert.assertTrue(users.contains(userToDelete), "User was deleted.");
+        softAssert.assertAll();
     }
 }

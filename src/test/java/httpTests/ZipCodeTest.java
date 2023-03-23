@@ -26,38 +26,40 @@ public class ZipCodeTest {
     }
 
     @Issue("GML-20.1")
-    @Test(description = "Scenario_1")
+    @Test(description = "GetZipCodesTest scenario_1")
     public void getZipCodesTest() {
         final ResponseEntity<List<String>> zipCodes = zipCodeClient.getZipCodes();
         Assert.assertEquals(zipCodes.getStatusCode(), Const.STATUS_200, "Status code is not 200");
-        Assert.assertFalse(zipCodes.getBody().isEmpty(),"List of zip codes is empty");
+        Assert.assertFalse(zipCodes.getBody().isEmpty(), "List of zip codes is empty");
     }
 
-    @Test(description = "Scenario_2")
+    @Test(description = "PostZipCodesTest scenario_2")
     public void postZipCodesTest() {
         final ResponseEntity<List<String>> zipCodes = zipCodeClient.postZipCodes(List.of(zipCodeRand1, zipCodeRand2));
 
-        Assert.assertEquals(zipCodes.getStatusCode(),Const.STATUS_201,"Isn't 201");
-        Assert.assertTrue(zipCodes.getBody().contains(zipCodeRand1),"Zip code wasn't added");
-        Assert.assertTrue(zipCodes.getBody().contains(zipCodeRand2),"Zip code wasn't added");
+        Assert.assertEquals(zipCodes.getStatusCode(), Const.STATUS_201, "Isn't 201");
+        Assert.assertTrue(zipCodes.getBody().contains(zipCodeRand1), "Zip code wasn't added");
+        Assert.assertTrue(zipCodes.getBody().contains(zipCodeRand2), "Zip code wasn't added");
     }
 
     @Issue("GML-20.2")
-    @Test(description = "Scenario_3")
+    @Test(description = "PostZipCodesInSentListDuplicatesTest scenario_3")
     public void postZipCodesInSentListDuplicatesTest() {
-           ResponseEntity<List<String>> zipCodes = zipCodeClient.postZipCodes(List.of(zipCodeRand1, zipCodeRand1));
-           Assert.assertEquals(zipCodes.getStatusCode(),Const.STATUS_201,"Isn't 201");
-           Assert.assertEquals(Collections.frequency(zipCodes.getBody(), zipCodeRand1),
-                   1, "Duplicates were created");
+        ResponseEntity<List<String>> zipCodes = zipCodeClient.postZipCodes(List.of(zipCodeRand1, zipCodeRand1));
+        Assert.assertEquals(zipCodes.getStatusCode(), Const.STATUS_201, "Isn't 201");
+        Assert.assertEquals(Collections.frequency(zipCodes.getBody(), zipCodeRand1),
+                1, "Duplicates were created");
     }
 
-    @Issue("GML-20.3")
-    @Test(description = "Scenario_4")
+    @Test(description = "PostZipCodesOnServerDuplicatesTest scenario_4")
     public void postZipCodesOnServerDuplicatesTest() {
-        List zipCodesOnServer = List.of("qqqqq", "22222");
+        ResponseEntity<List<String>> getZipcodes = zipCodeClient.getZipCodes();
+        String duplicate1 = getZipcodes.getBody().get(0);
+        String duplicate2 = getZipcodes.getBody().get(1);
+        List zipCodesOnServer = List.of(duplicate1, duplicate2);
         ResponseEntity<List<String>> zipCodes = zipCodeClient.postZipCodes(zipCodesOnServer);
 
-        Assert.assertEquals(zipCodes.getStatusCode(),Const.STATUS_201,"Isn't 201");
+        Assert.assertEquals(zipCodes.getStatusCode(), Const.STATUS_201, "Isn't 201");
         Assert.assertEquals(Collections.frequency(zipCodes.getBody(), zipCodesOnServer.get(0)),
                 1, "Duplicate was created");
         Assert.assertEquals(Collections.frequency(zipCodes.getBody(), zipCodesOnServer.get(1)),

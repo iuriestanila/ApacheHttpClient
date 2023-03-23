@@ -29,10 +29,10 @@ public class UploadUsersTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_1")
+    @Test(description = "UploadUserTest scenario_1")
     public void uploadUserTest() {
         SoftAssert softAssert = new SoftAssert();
-        File file = new File("src/test/resources/users.json ");
+        File file = new File("src/test/resources/users.json");
         usersFromFile = objectMapper.readValue(file, new TypeReference<>() {
         });
 
@@ -47,7 +47,7 @@ public class UploadUsersTest {
 
     @Issue("GML-70.1")
     @SneakyThrows
-    @Test(description = "Scenario_2")
+    @Test(description = "UploadUserIncorrectZipcodeTest scenario_2")
     public void uploadUserIncorrectZipcodeTest() {
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/userIncorrectZipcode.json");
@@ -64,10 +64,10 @@ public class UploadUsersTest {
 
     @Issue("GML-70.2")
     @SneakyThrows
-    @Test(description = "Scenario_3")
+    @Test(description = "RequiredFieldMissUploadTest scenario_3")
     public void requiredFieldMissUploadTest() {
         SoftAssert softAssert = new SoftAssert();
-        File file = new File("src/test/resources/userIncorrectZipcode.json");
+        File file = new File("src/test/resources/userMissRequiredField.json");
         usersFromFile = objectMapper.readValue(file, new TypeReference<>() {
         });
 

@@ -21,7 +21,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class UploadUserURL2AssuredTest {
+public class UploadUserAssuredTest {
     private static final String UPLOAD_RESPONSE_TEXT = "Number of users = ";
     private UserClient userClient;
     private ObjectMapper objectMapper;
@@ -33,7 +33,7 @@ public class UploadUserURL2AssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_1")
+    @Test(description = "UploadUserTest scenario_1")
     public void uploadUserAssuredTest(){
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/users.json");
@@ -59,7 +59,7 @@ public class UploadUserURL2AssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_2")
+    @Test(description = "UploadUserIncorrectZipcodeTest scenario_2")
     public void uploadUserIncorrectZipcodeAssuredTest(){
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/userIncorrectZipcode.json");
@@ -84,7 +84,7 @@ public class UploadUserURL2AssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_3")
+    @Test(description = "RequiredFieldMissUploadTest scenario_3")
     public void requiredFieldMissDeleteTest(){
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/userMissRequiredFieldURL2.json");

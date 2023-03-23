@@ -6,7 +6,6 @@ import apacheHttpClient.enums.AccessType;
 import apacheHttpClient.utils.Const;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import restAssured.AuthRAssured;
@@ -18,7 +17,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class ZipCodeURL2AssuredTest {
+public class ZipCodeAssuredTest {
     String zipCodeRand1;
     String zipCodeRand2;
 
@@ -27,7 +26,8 @@ public class ZipCodeURL2AssuredTest {
         zipCodeRand1 = RandomStringUtils.randomNumeric(5);
         zipCodeRand2 = RandomStringUtils.randomNumeric(5);
     }
-    @Test
+
+    @Test(description = "GetZipCodesTest scenario_1")
     public void getZipCodesAssuredTest() {
         given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
@@ -38,7 +38,7 @@ public class ZipCodeURL2AssuredTest {
                 .body("$", hasSize(greaterThan(0)));
     }
 
-    @Test(description = "Scenario_2")
+    @Test(description = "PostZipCodesTest scenario_2")
     public void postZipCodesAssuredTest() {
         List<String> zipCodes = List.of(zipCodeRand1, zipCodeRand2);
         given()
@@ -52,7 +52,7 @@ public class ZipCodeURL2AssuredTest {
                 .body("", hasItems((zipCodes.toArray())));
     }
 
-    @Test(description = "Scenario_3")
+    @Test(description = "PostZipCodesInSentListDuplicatesTest scenario_3")
     public void postZipCodesInSentListDuplicatesAssuredTest() {
         List<String> duplicates = List.of(zipCodeRand1, zipCodeRand1);
 
@@ -68,9 +68,16 @@ public class ZipCodeURL2AssuredTest {
         assertThat(Collections.frequency(responseZipCodes, zipCodeRand1), equalTo(1));
     }
 
-    @Test(description = "Scenario_4")
+    @Test(description = "PostZipCodesOnServerDuplicatesTest scenario_4")
     public void postZipCodesOnServerDuplicatesAssuredTest() {
-        List<String> duplicatesOnServer = List.of("ABCDE", "12345");
+        List<String> zipCodes = given()
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
+                .when().get(Client.BASE_URL + ZipCodeClient.GET_ZIPCODES_ENDPOINT)
+                .then().extract().body().jsonPath().getList("$");
+
+        String duplicate1 = zipCodes.get(0);
+        String duplicate2 = zipCodes.get(0);
+        List<String> duplicatesOnServer = List.of(duplicate1, duplicate2);
 
         Response response = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))

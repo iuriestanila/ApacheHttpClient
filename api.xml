@@ -2,7 +2,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="api-suite">
-    <test name="user testing">
+
+    <test name="apache http tests">
         <classes>
             <class name="httpTests.UserTest"/>
             <class name="httpTests.ZipCodeTest"/>
@@ -10,6 +11,16 @@
             <class name="httpTests.DeleteUserTest"/>
             <class name="httpTests.UpdateUserTest"/>
             <class name="httpTests.UploadUsersTest"/>
+        </classes>
+    </test>
+    <test name = "rest-assured tests">
+        <classes>
+            <class name="restAssured.tests.ZipCodeAssuredTest"/>
+            <class name="restAssured.tests.UserAssuredTest"/>
+            <class name="restAssured.tests.FilterUserAssuredTest"/>
+            <class name="restAssured.tests.UpdateUserAssuredTest"/>
+            <class name="restAssured.tests.DeleteUserAssuredTest"/>
+            <class name="restAssured.tests.UploadUserAssuredTest"/>
         </classes>
     </test>
 </suite>

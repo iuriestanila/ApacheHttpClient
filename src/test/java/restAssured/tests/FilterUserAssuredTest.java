@@ -18,7 +18,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
-public class FilterUserURL2AssuredTest {
+public class FilterUserAssuredTest {
     private UserClient userClient;
     private ZipCodeClient zipcodeClient;
     private String zipcode;
@@ -33,7 +33,7 @@ public class FilterUserURL2AssuredTest {
     }
 
 
-    @Test(description = "Scenario_1")
+    @Test(description = "GetUserTest scenario_1")
     public void getUserAssuredTest() {
         Response response = given()
                 .contentType(ContentType.JSON)
@@ -47,7 +47,7 @@ public class FilterUserURL2AssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_2")
+    @Test(description = "GetUserOlderThanTest scenario_2")
     public void getUserOlderThanAssuredTest() {
         int ageInput = 30;
         given()
@@ -62,7 +62,7 @@ public class FilterUserURL2AssuredTest {
                 .body("age", Matchers.everyItem(Matchers.greaterThan(ageInput)));
     }
 
-    @Test(description = "Scenario_3")
+    @Test(description = "GetUserYoungerThanTest scenario_3")
     public void getUserYoungerThanAssuredTest() {
         int ageInput = 30;
         given()
@@ -77,7 +77,7 @@ public class FilterUserURL2AssuredTest {
                 .body("age", Matchers.everyItem(Matchers.lessThan(ageInput)));
     }
 
-    @Test(description = "Scenario_4")
+    @Test(description = "GetUserSexParameterTest scenario_4")
     public void getUserSexParameterTest() {
         String sexInput = "MALE";
         given()

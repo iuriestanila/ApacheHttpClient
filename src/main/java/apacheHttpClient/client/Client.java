@@ -13,8 +13,6 @@ public class Client {
                 .addBearerToken(AuthClient.getToken(AccessType.READ))
                 .execute();
     }
-
-
     public static HttpResponse doGet(String endpoint, String key, String value) {
         return Request.get(BASE_URL + endpoint)
                 .addParameter(key, value)

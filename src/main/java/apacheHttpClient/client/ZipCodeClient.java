@@ -60,4 +60,9 @@ public class ZipCodeClient {
             throw new RuntimeException("Zip code was not added");
         }
     }
+
+    public String createRandomZipcode() {
+        String randomZipCode = RandomStringUtils.randomNumeric(5);
+        return randomZipCode;
+    }
 }

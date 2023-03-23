@@ -19,7 +19,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class UserURL2AssuredTest {
+public class UserAssuredTest {
     private UserClient userClient;
     private ZipCodeClient zipcodeClient;
     private String zipcode;
@@ -36,7 +36,7 @@ public class UserURL2AssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_1")
+    @Test(description = "PostUserZipRemovedAssuredTest scenario_1")
     public void postUserZipRemovedAssuredTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -68,7 +68,7 @@ public class UserURL2AssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_2")
+    @Test(description = "PostUserAssuredTest scenario_2")
     public void postUserAssuredTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -93,10 +93,11 @@ public class UserURL2AssuredTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_3")
+    @Test(description = "PostUserZipIncorrectAssuredTest scenario_3")
     public void postUserZipIncorrectAssuredTest() {
         SoftAssert softAssert = new SoftAssert();
-        User user = new User(51, "Jonas2", "MALE", "FFFF9");
+        String randomZipcode = zipcodeClient.createRandomZipcode();
+        User user = userClient.createUserData(randomZipcode);
 
         Response response = given()
                 .contentType(ContentType.JSON)
@@ -120,22 +121,22 @@ public class UserURL2AssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_4")
+    @Test(description = "PostUserSameNameSexAsOnAppAssuredTest scenario_4")
     public void postUserSameNameSexAsOnAppAssuredTest() {
-        /*
-        Given I am authorized user
-        When I send POST request to /users endpoint
-        And Request body contains user to add with the same name and sex as existing user in the system
-        Then I get 400 response code
-        And User is not added to application
-         */
         SoftAssert softAssert = new SoftAssert();
-        User user = new User(50, "Maria", "FEMALE", zipcode);
+        List<User> usersAll = given()
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).then().extract()
+                .body()
+                .jsonPath().getList("$", User.class);
+        User userToUse = usersAll.get(0);
+
+        User userToPost = new User(50, userToUse.getName(), userToUse.getSex(), zipcode);
         Response response = given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
                 .header("Content-Type", "application/json")
-                .body(user)
+                .body(userToPost)
                 .when()
                 .post(Client.BASE_URL + Const.USERS_ENDPOINT);
 
@@ -148,7 +149,7 @@ public class UserURL2AssuredTest {
         response.then()
                 .statusCode(Const.STATUS_400);
 
-        softAssert.assertFalse(users.contains(user), "User was added to the app");
+        softAssert.assertFalse(users.contains(userToPost), "User was added to the app");
         softAssert.assertAll();
     }
 }

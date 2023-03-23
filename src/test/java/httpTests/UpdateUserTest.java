@@ -27,7 +27,7 @@ public class UpdateUserTest {
         userToChange = userClient.createAvailableUser(zipcode);
     }
 
-    @Test(description = "Scenario_1")
+    @Test(description = "PatchUserTest scenario_1")
     public void patchUserTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -37,15 +37,14 @@ public class UpdateUserTest {
         int statusCode = userClient.patchUser(userToUpdate);
         List<User> appUsers = userClient.getUsers().getBody();
 
-        softAssert.assertEquals(statusCode, Const.STATUS_200,"Wrong status code.");
-        softAssert.assertTrue(appUsers.contains(userNewValues),"User wasn't updated.");
-        softAssert.assertFalse(appUsers.contains(userToChange),"User wasn't updated.");
+        softAssert.assertEquals(statusCode, Const.STATUS_200, "Wrong status code.");
+        softAssert.assertTrue(appUsers.contains(userNewValues), "User wasn't updated.");
+        softAssert.assertFalse(appUsers.contains(userToChange), "User wasn't updated.");
         softAssert.assertAll();
     }
 
-    @Issue("GML-50.1")
     @SneakyThrows
-    @Test(description = "Scenario_2")
+    @Test(description = "PutUserIncorrectZipcodeTest scenario_2")
     public void putUserIncorrectZipcodeTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -55,15 +54,14 @@ public class UpdateUserTest {
         int statusCode = userClient.putUser(userToUpdate);
         List<User> appUsers = userClient.getUsers().getBody();
 
-        softAssert.assertEquals(statusCode, Const.STATUS_424,"Wrong status code.");
-        softAssert.assertFalse(appUsers.contains(newUser),"User was updated.");
+        softAssert.assertEquals(statusCode, Const.STATUS_424, "Wrong status code.");
+        softAssert.assertFalse(appUsers.contains(newUser), "User was updated.");
         softAssert.assertTrue(appUsers.contains(userToChange),
                 String.format("User %s was deleted.", userToChange.toString()));
         softAssert.assertAll();
     }
 
-    @Issue("GML-50.2")
-    @Test(description = "Scenario_3")
+    @Test(description = "PutUserFieldMissingTest scenario_3")
     public void putUserFieldMissingTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -73,9 +71,9 @@ public class UpdateUserTest {
         int statusCode = userClient.putUser(userToUpdate);
         List<User> appUsers = userClient.getUsers().getBody();
 
-        softAssert.assertEquals(statusCode, Const.STATUS_409,"Wrong status code.");
-        softAssert.assertFalse(appUsers.contains(userNewValues),"User was updated.");
-        softAssert.assertTrue(appUsers.contains(userToChange),"User was updated.");
+        softAssert.assertEquals(statusCode, Const.STATUS_409, "Wrong status code.");
+        softAssert.assertFalse(appUsers.contains(userNewValues), "User was updated.");
+        softAssert.assertTrue(appUsers.contains(userToChange), "User was updated.");
         softAssert.assertAll();
     }
 }
