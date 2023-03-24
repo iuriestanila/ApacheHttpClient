@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -36,31 +37,26 @@ public class UserAssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "PostUserZipRemovedAssuredTest scenario_1")
+    @Test(description = "Post user zip removed assured test; scenario_1")
     public void postUserZipRemovedAssuredTest() {
         SoftAssert softAssert = new SoftAssert();
 
-        Response response = given()
+        given()
                 .contentType(ContentType.JSON) //
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
-                .header("Content-Type", "application/json")
                 .body(userToAdd)
                 .when()
-                .post(Client.BASE_URL + Const.USERS_ENDPOINT);
+                .post(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then().statusCode(Const.STATUS_201);
 
-        List<User> users = given()
+        List<User> users = List.of(given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
-                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).then().extract()
-                .body()
-                .jsonPath().getList("$", User.class);
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).as(User[].class));
 
         List<String> zipCodes = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
                 .when().get(Client.BASE_URL + ZipCodeClient.GET_ZIPCODES_ENDPOINT).then()
                 .extract().body().jsonPath().getList("$");
-
-        response.then()
-                .statusCode(Const.STATUS_201);
 
         softAssert.assertTrue(users.contains(userToAdd), "User wasn't added to the app");
         softAssert.assertFalse(zipCodes.contains(zipcode));
@@ -68,88 +64,68 @@ public class UserAssuredTest {
     }
 
     @SneakyThrows
-    @Test(description = "PostUserAssuredTest scenario_2")
+    @Test(description = "Post user assured test; scenario_2")
     public void postUserAssuredTest() {
-        SoftAssert softAssert = new SoftAssert();
-
-        Response response = given()
+        given()
                 .contentType(ContentType.JSON) //
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
                 .header("Content-Type", "application/json")
                 .body(userToAdd)
                 .when()
-                .post(Client.BASE_URL + Const.USERS_ENDPOINT);
-
-        List<User> users = given()
-                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
-                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).then().extract()
-                .body()
-                .jsonPath().getList("$", User.class);
-
-        response.then()
+                .post(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then()
                 .statusCode(Const.STATUS_201);
 
-        softAssert.assertTrue(users.contains(userToAdd), "User wasn't added to the app");
-        softAssert.assertAll();
+        List<User> users = List.of(given()
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).as(User[].class));
+
+        Assert.assertTrue(users.contains(userToAdd), "User wasn't added to the app");
     }
 
-    @Test(description = "PostUserZipIncorrectAssuredTest scenario_3")
+    @Test(description = "Post user zip incorrect assured test; scenario_3")
     public void postUserZipIncorrectAssuredTest() {
-        SoftAssert softAssert = new SoftAssert();
         String randomZipcode = zipcodeClient.createRandomZipcode();
         User user = userClient.createUserData(randomZipcode);
 
-        Response response = given()
+        given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
                 .header("Content-Type", "application/json")
                 .body(user)
                 .when()
-                .post(Client.BASE_URL + Const.USERS_ENDPOINT);
+                .post(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then().statusCode(Const.STATUS_424);
 
-        List<User> users = given()
+        List<User> users = List.of(given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
-                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).then().extract()
-                .body()
-                .jsonPath().getList("$", User.class);
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).as(User[].class));
 
-        response.then()
-                .statusCode(Const.STATUS_424);
-
-        softAssert.assertFalse(users.contains(user), "User was added to the app");
-        softAssert.assertAll();
+        Assert.assertFalse(users.contains(user), "User was added to the app");
     }
 
     @SneakyThrows
-    @Test(description = "PostUserSameNameSexAsOnAppAssuredTest scenario_4")
+    @Test(description = "Post user same name sex as on app assured test; scenario_4")
     public void postUserSameNameSexAsOnAppAssuredTest() {
-        SoftAssert softAssert = new SoftAssert();
-        List<User> usersAll = given()
+        List<User> usersAll = List.of(given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
-                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).then().extract()
-                .body()
-                .jsonPath().getList("$", User.class);
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).as(User[].class));
         User userToUse = usersAll.get(0);
 
         User userToPost = new User(50, userToUse.getName(), userToUse.getSex(), zipcode);
-        Response response = given()
+        given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
                 .header("Content-Type", "application/json")
                 .body(userToPost)
                 .when()
-                .post(Client.BASE_URL + Const.USERS_ENDPOINT);
+                .post(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .then().statusCode(Const.STATUS_400);
 
-        List<User> users = given()
+        List<User> users = List.of(given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
-                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).then().extract()
-                .body()
-                .jsonPath().getList("$", User.class);
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT).as(User[].class));
 
-        response.then()
-                .statusCode(Const.STATUS_400);
-
-        softAssert.assertFalse(users.contains(userToPost), "User was added to the app");
-        softAssert.assertAll();
+        Assert.assertFalse(users.contains(userToPost), "User was added to the app");
     }
 }

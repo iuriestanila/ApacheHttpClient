@@ -27,7 +27,7 @@ public class UpdateUserTest {
         userToChange = userClient.createAvailableUser(zipcode);
     }
 
-    @Test(description = "PatchUserTest scenario_1")
+    @Test(description = "Patch user test; scenario_1")
     public void patchUserTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -44,7 +44,7 @@ public class UpdateUserTest {
     }
 
     @SneakyThrows
-    @Test(description = "PutUserIncorrectZipcodeTest scenario_2")
+    @Test(description = "Put user incorrect zipcode test; scenario_2")
     public void putUserIncorrectZipcodeTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -61,7 +61,7 @@ public class UpdateUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "PutUserFieldMissingTest scenario_3")
+    @Test(description = "Put user field missing test; scenario_3")
     public void putUserFieldMissingTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -73,7 +73,7 @@ public class UpdateUserTest {
 
         softAssert.assertEquals(statusCode, Const.STATUS_409, "Wrong status code.");
         softAssert.assertFalse(appUsers.contains(userNewValues), "User was updated.");
-        softAssert.assertTrue(appUsers.contains(userToChange), "User was updated.");
+        softAssert.assertTrue(appUsers.contains(userToChange), "User to change was deleted.");
         softAssert.assertAll();
     }
 }

@@ -27,7 +27,7 @@ public class ZipCodeAssuredTest {
         zipCodeRand2 = RandomStringUtils.randomNumeric(5);
     }
 
-    @Test(description = "GetZipCodesTest scenario_1")
+    @Test(description = "Get zipcodes test assured; scenario_1")
     public void getZipCodesAssuredTest() {
         given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
@@ -38,7 +38,7 @@ public class ZipCodeAssuredTest {
                 .body("$", hasSize(greaterThan(0)));
     }
 
-    @Test(description = "PostZipCodesTest scenario_2")
+    @Test(description = "Post zipcodes test assured; scenario_2")
     public void postZipCodesAssuredTest() {
         List<String> zipCodes = List.of(zipCodeRand1, zipCodeRand2);
         given()
@@ -52,7 +52,7 @@ public class ZipCodeAssuredTest {
                 .body("", hasItems((zipCodes.toArray())));
     }
 
-    @Test(description = "PostZipCodesInSentListDuplicatesTest scenario_3")
+    @Test(description = "Post duplicate zipcodes in sent list test assured; scenario_3")
     public void postZipCodesInSentListDuplicatesAssuredTest() {
         List<String> duplicates = List.of(zipCodeRand1, zipCodeRand1);
 
@@ -68,7 +68,7 @@ public class ZipCodeAssuredTest {
         assertThat(Collections.frequency(responseZipCodes, zipCodeRand1), equalTo(1));
     }
 
-    @Test(description = "PostZipCodesOnServerDuplicatesTest scenario_4")
+    @Test(description = "Post duplicate zipcodes on server test assured; scenario_4")
     public void postZipCodesOnServerDuplicatesAssuredTest() {
         List<String> zipCodes = given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))

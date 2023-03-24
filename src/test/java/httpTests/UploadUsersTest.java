@@ -29,7 +29,7 @@ public class UploadUsersTest {
     }
 
     @SneakyThrows
-    @Test(description = "UploadUserTest scenario_1")
+    @Test(description = "Upload user test; scenario_1")
     public void uploadUserTest() {
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/users.json");
@@ -47,7 +47,7 @@ public class UploadUsersTest {
 
     @Issue("GML-70.1")
     @SneakyThrows
-    @Test(description = "UploadUserIncorrectZipcodeTest scenario_2")
+    @Test(description = "Upload user incorrect zipcode test; scenario_2")
     public void uploadUserIncorrectZipcodeTest() {
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/userIncorrectZipcode.json");
@@ -64,7 +64,7 @@ public class UploadUsersTest {
 
     @Issue("GML-70.2")
     @SneakyThrows
-    @Test(description = "RequiredFieldMissUploadTest scenario_3")
+    @Test(description = "Required field miss upload test; scenario_3")
     public void requiredFieldMissUploadTest() {
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/userMissRequiredField.json");

@@ -24,7 +24,7 @@ public class UserTest {
         user = userClient.createUserData(zipcode);
     }
 
-    @Test(description = "PostUserZipRemovedTest scenario_1")
+    @Test(description = "Post user zip removed test; scenario_1")
     public void postUserZipRemovedTest() {
         SoftAssert softAssert = new SoftAssert();
         int statusCode = userClient.postUser(user);
@@ -37,7 +37,7 @@ public class UserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "PostUserTest scenario_2")
+    @Test(description = "Post user test; scenario_2")
     public void postUserTest() {
         SoftAssert softAssert = new SoftAssert();
         int statusCode = userClient.postUser(user);
@@ -48,7 +48,7 @@ public class UserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "PostUserZipIncorrectTest scenario_3")
+    @Test(description = "Post user zip incorrect test; scenario_3")
     public void postUserZipIncorrectTest() {
         SoftAssert softAssert = new SoftAssert();
         String randomZipcode = zipcodeClient.createRandomZipcode();
@@ -62,7 +62,7 @@ public class UserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "PostUserSameNameSexAsOnAppTest scenario_4")
+    @Test(description = "Post user same name sex as on app test; scenario_4")
     public void postUserSameNameSexAsOnAppTest() {
         SoftAssert softAssert = new SoftAssert();
         User user = userClient.getUsers().getBody().get(0);

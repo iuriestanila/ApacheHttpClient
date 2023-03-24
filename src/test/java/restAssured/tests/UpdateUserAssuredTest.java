@@ -11,7 +11,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.Matchers;
-import org.testng.annotations.AfterMethod;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -36,75 +36,79 @@ public class UpdateUserAssuredTest {
         userToChange = userClient.createAvailableUser(zipcode);
     }
 
-    @Test(description = "PatchUserTest scenario_1")
+    @Test(description = "Patch user assured test; scenario_1")
     public void patchUserAssuredTest() {
         SoftAssert softAssert = new SoftAssert();
         User userNewValues = User.random(zipcode);
         UserToUpdate userToUpdate = new UserToUpdate(userNewValues, userToChange);
 
-        Response response = given()
+        given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
                 .body(userToUpdate)
                 .when()
                 .patch(Client.BASE_URL + Const.USERS_ENDPOINT)
                 .then()
-                .extract()
-                .response();
+                .statusCode(Const.STATUS_200);
 
-        List<User> users = given()
+        List<User> users = List.of(given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
                 .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
-                .then().extract().body().jsonPath().getList("$", User.class);
+                .as(User[].class));
 
-        response.then()
-                .statusCode(Const.STATUS_200);
         softAssert.assertTrue(users.contains(userNewValues), "User wasn't updated.");
         softAssert.assertFalse(users.contains(userToChange), "User wasn't updated.");
+        softAssert.assertAll();
     }
 
-    @Test(description = "PutUserIncorrectZipcodeTest scenario_2")
+    @Test(description = "Put user incorrect zipcode assured test; scenario_2")
     public void putUserIncorrectZipcodeAssuredTest() {
         SoftAssert softAssert = new SoftAssert();
         User newUser = User.random();
         UserToUpdate userToUpdate = new UserToUpdate(newUser, userToChange);
 
-        Response response = given()
+        given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
                 .body(userToUpdate)
                 .when()
                 .put(Client.BASE_URL + Const.USERS_ENDPOINT)
                 .then()
-                .extract()
-                .response();
+                .statusCode(Const.STATUS_424);
 
-        List<User> users = given()
+        List<User> users = List.of(given()
                 .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
                 .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
-                .then().extract().body().jsonPath().getList("$", User.class);
+                .as(User[].class));
 
-        response.then()
-                .statusCode(Const.STATUS_424);
         softAssert.assertFalse(users.contains(newUser), "User was updated.");
+        softAssert.assertTrue(users.contains(userToChange),
+                String.format("User %s was deleted.", userToChange.toString()));
         softAssert.assertAll();
     }
 
-    @Test(description = "PutUserFieldMissingTest scenario_3")
+    @Test(description = "Put user field missing assured test; scenario_3")
     public void putUserFieldMissingAssuredTest() {
+        SoftAssert softAssert = new SoftAssert();
         User userNewValues = User.builder().age(25).zipCode(zipcode).build();
         UserToUpdate userToUpdate = new UserToUpdate(userNewValues, userToChange);
 
-        final RequestSpecification request = given().contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE));
-
-        request.body(userToUpdate)
+        given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.WRITE))
+                .body(userToUpdate)
                 .when()
-                .put(Client.BASE_URL + Const.USERS_ENDPOINT).then().statusCode(409);
-
-        request.when()
-                .get(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .put(Client.BASE_URL + Const.USERS_ENDPOINT)
                 .then()
-                .body(not(Matchers.hasItem(userNewValues)));
+                .statusCode(Const.STATUS_409);
+
+        List<User> users = List.of(given()
+                .header("Authorization", "Bearer " + AuthRAssured.getToken(AccessType.READ))
+                .when().get(Client.BASE_URL + Const.USERS_ENDPOINT)
+                .as(User[].class));
+
+        softAssert.assertFalse(users.contains(userNewValues), "User was updated.");
+        softAssert.assertTrue(users.contains(userToChange), "User to change was deleted.");
+        softAssert.assertAll();
     }
 }

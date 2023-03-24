@@ -25,7 +25,7 @@ public class DeleteUserTest {
         userToDelete = userClient.createAvailableUser(zipcode);
     }
 
-    @Test(description = "DeleteUserTest scenario_1")
+    @Test(description = "Delete user test; scenario_1")
     public void deleteUserTest() {
         SoftAssert softAssert = new SoftAssert();
 
@@ -40,7 +40,7 @@ public class DeleteUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "FillRequiredFieldsDeleteTest scenario_2")
+    @Test(description = "Fill required fields delete test; scenario_2")
     public void fillRequiredFieldsDeleteTest() {
         SoftAssert softAssert = new SoftAssert();
         User userToDeleteRequiredFields = User.builder().name(userToDelete.getName()).sex(userToDelete.getSex()).build();
@@ -55,7 +55,7 @@ public class DeleteUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "RequiredFieldMissDeleteTest scenario_3")
+    @Test(description = "Required field miss delete test; scenario_3")
     public void requiredFieldMissDeleteTest() {
         SoftAssert softAssert = new SoftAssert();
         User userToDeleteRequiredFields = User.builder().name(userToDelete.getName()).build();
