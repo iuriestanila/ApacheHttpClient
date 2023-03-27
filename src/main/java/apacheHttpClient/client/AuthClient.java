@@ -1,9 +1,9 @@
-package client;
+package apacheHttpClient.client;
 
+import apacheHttpClient.enums.AccessType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import enums.AccessType;
 import org.apache.http.HttpResponse;
-import pojo.Token;
+import apacheHttpClient.pojo.Token;
 
 import java.util.Locale;
 

@@ -1,19 +1,19 @@
-package client;
+package apacheHttpClient.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpResponse;
-import pojo.ResponseEntity;
-import pojo.User;
+import apacheHttpClient.pojo.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ZipCodeClient {
-    private static final String GET_ZIPCODES_ENDPOINT = "/zip-codes";
-    private static final String POST_ZIPCODES_ENDPOINT = "/zip-codes/expand";
+    public static final String GET_ZIPCODES_ENDPOINT = "/zip-codes";
+    public static final String POST_ZIPCODES_ENDPOINT = "/zip-codes/expand";
     private final ObjectMapper objectMapper;
 
     public ZipCodeClient() {
@@ -21,6 +21,7 @@ public class ZipCodeClient {
     }
 
 
+    @Step
     @SneakyThrows
     public ResponseEntity<List<String>> getZipCodes() {
         final HttpResponse httpResponse = Client.doGet(GET_ZIPCODES_ENDPOINT);
@@ -33,6 +34,7 @@ public class ZipCodeClient {
         return response;
     }
 
+    @Step
     @SneakyThrows
     public ResponseEntity<List<String>> postZipCodes(List<String> zipcodesPassed) {
         final String requestBody = objectMapper.writeValueAsString(zipcodesPassed);
@@ -57,5 +59,10 @@ public class ZipCodeClient {
         } else {
             throw new RuntimeException("Zip code was not added");
         }
+    }
+
+    public String createRandomZipcode() {
+        String randomZipCode = RandomStringUtils.randomNumeric(5);
+        return randomZipCode;
     }
 }

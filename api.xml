@@ -3,18 +3,24 @@
 
 <suite name="api-suite">
 
-    <listeners>
-        <listener class-name="utils.RestListener"/>
-    </listeners>
-
-    <test name="user testing">
+    <test name="apache http tests">
         <classes>
-            <class name="UserTest"/>
-            <class name="ZipCodeTest"/>
-            <class name="FilterUserTest"/>
-            <class name="DeleteUserTest"/>
-            <class name="UpdateUserTest"/>
-            <class name="UploadUsersTest"/>
+            <class name="httpTests.UserTest"/>
+            <class name="httpTests.ZipCodeTest"/>
+            <class name="httpTests.FilterUserTest"/>
+            <class name="httpTests.DeleteUserTest"/>
+            <class name="httpTests.UpdateUserTest"/>
+            <class name="httpTests.UploadUsersTest"/>
+        </classes>
+    </test>
+    <test name = "rest-assured tests">
+        <classes>
+            <class name="restAssured.tests.ZipCodeAssuredTest"/>
+            <class name="restAssured.tests.UserAssuredTest"/>
+            <class name="restAssured.tests.FilterUserAssuredTest"/>
+            <class name="restAssured.tests.UpdateUserAssuredTest"/>
+            <class name="restAssured.tests.DeleteUserAssuredTest"/>
+            <class name="restAssured.tests.UploadUserAssuredTest"/>
         </classes>
     </test>
 </suite>

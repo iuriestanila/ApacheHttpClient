@@ -1,4 +1,4 @@
-package enums;
+package apacheHttpClient.enums;
 
 public enum AccessType {
     READ, WRITE

@@ -1,17 +1,17 @@
-import client.UserClient;
-import client.ZipCodeClient;
+package httpTests;
+
+import apacheHttpClient.client.UserClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.qameta.allure.Issue;
 import lombok.SneakyThrows;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import pojo.ResponseEntity;
-import pojo.User;
-import utils.Const;
+import apacheHttpClient.pojo.ResponseEntity;
+import apacheHttpClient.pojo.User;
+import apacheHttpClient.utils.Const;
 
 import java.io.File;
 import java.util.List;
@@ -29,10 +29,10 @@ public class UploadUsersTest {
     }
 
     @SneakyThrows
-    @Test(description = "Scenario_1")
+    @Test(description = "Upload user test; scenario_1")
     public void uploadUserTest() {
         SoftAssert softAssert = new SoftAssert();
-        File file = new File("src/test/resources/users.json ");
+        File file = new File("src/test/resources/users.json");
         usersFromFile = objectMapper.readValue(file, new TypeReference<>() {
         });
 
@@ -47,7 +47,7 @@ public class UploadUsersTest {
 
     @Issue("GML-70.1")
     @SneakyThrows
-    @Test(description = "Scenario_2")
+    @Test(description = "Upload user incorrect zipcode test; scenario_2")
     public void uploadUserIncorrectZipcodeTest() {
         SoftAssert softAssert = new SoftAssert();
         File file = new File("src/test/resources/userIncorrectZipcode.json");
@@ -64,10 +64,10 @@ public class UploadUsersTest {
 
     @Issue("GML-70.2")
     @SneakyThrows
-    @Test(description = "Scenario_3")
+    @Test(description = "Required field miss upload test; scenario_3")
     public void requiredFieldMissUploadTest() {
         SoftAssert softAssert = new SoftAssert();
-        File file = new File("src/test/resources/userIncorrectZipcode.json");
+        File file = new File("src/test/resources/userMissRequiredField.json");
         usersFromFile = objectMapper.readValue(file, new TypeReference<>() {
         });
 

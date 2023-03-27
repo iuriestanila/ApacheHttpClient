@@ -1,11 +1,13 @@
-import client.UserClient;
-import client.ZipCodeClient;
+package httpTests;
+
+import apacheHttpClient.client.UserClient;
+import apacheHttpClient.client.ZipCodeClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import pojo.ResponseEntity;
-import pojo.User;
-import utils.Const;
+import apacheHttpClient.pojo.ResponseEntity;
+import apacheHttpClient.pojo.User;
+import apacheHttpClient.utils.Const;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class FilterUserTest {
         zipcode = zipcodeClient.createAvailableZipcode();
     }
 
-    @Test(description = "Scenario_1")
+    @Test(description = "Get user test; scenario_1")
     public void getUserTest() {
         SoftAssert softAssert = new SoftAssert();
         final ResponseEntity<List<User>> responseEntity = userClient.getUsers();
@@ -30,7 +32,7 @@ public class FilterUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_2")
+    @Test(description = "Get user older than test; scenario_2")
     public void getUserOlderThanTest() {
         SoftAssert softAssert = new SoftAssert();
         ResponseEntity<List<User>> response = userClient.getUsers("olderThan", "30");
@@ -40,7 +42,7 @@ public class FilterUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_3")
+    @Test(description = "Get user younger than test; scenario_3")
     public void getUserYoungerThanTest() {
         SoftAssert softAssert = new SoftAssert();
         ResponseEntity<List<User>> response = userClient.getUsers("youngerThan", "25");
@@ -50,7 +52,7 @@ public class FilterUserTest {
         softAssert.assertAll();
     }
 
-    @Test(description = "Scenario_4")
+    @Test(description = "Get user sex parameter test assured; scenario_4")
     public void getUserSexParameterTest() {
         SoftAssert softAssert = new SoftAssert();
         ResponseEntity<List<User>> response = userClient.getUsers("sex", "MALE");

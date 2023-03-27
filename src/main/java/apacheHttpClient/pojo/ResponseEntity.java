@@ -1,4 +1,4 @@
-package pojo;
+package apacheHttpClient.pojo;
 
 import lombok.Data;
 

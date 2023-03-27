@@ -1,6 +1,6 @@
-package client;
+package apacheHttpClient.client;
 
-import enums.HttpMethod;
+import apacheHttpClient.enums.HttpMethod;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;

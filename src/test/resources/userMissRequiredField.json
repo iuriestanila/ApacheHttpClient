@@ -2,11 +2,11 @@
   {
     "age": 18,
     "sex": "MALE",
-    "zipCode": "AAAAA"
+    "zipCode": "12345"
   },
   {
     "age": 40,
     "sex": "FEMALE",
-    "zipCode": "BBBBB"
+    "zipCode": "ABCDE"
   }
 ]

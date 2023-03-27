@@ -1,4 +1,4 @@
-package client;
+package apacheHttpClient.client;
 
 
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;

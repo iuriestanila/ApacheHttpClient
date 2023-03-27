@@ -1,24 +1,18 @@
-package client;
+package apacheHttpClient.client;
 
-import enums.AccessType;
-import lombok.SneakyThrows;
+import apacheHttpClient.enums.AccessType;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.File;
 
 public class Client {
-    public final static String BASE_URL = "http://localhost:49000";
+    public final static String BASE_URL = System.getProperty("baseUrl", "http://localhost:49900");
 
     public static HttpResponse doGet(String endpoint) {
         return Request.get(BASE_URL + endpoint)
                 .addBearerToken(AuthClient.getToken(AccessType.READ))
                 .execute();
     }
-
     public static HttpResponse doGet(String endpoint, String key, String value) {
         return Request.get(BASE_URL + endpoint)
                 .addParameter(key, value)
